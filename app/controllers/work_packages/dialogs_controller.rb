@@ -60,6 +60,24 @@ class WorkPackages::DialogsController < ApplicationController
     end
   end
 
+  def respond_with_relations_tab_update(service_result, **)
+    if service_result.success?
+      component = WorkPackageRelationsTab::IndexComponent.new(work_package: service_result.result.parent, **)
+      replace_via_turbo_stream(component:)
+      render_success_flash_message_via_turbo_stream(message: I18n.t(:notice_successful_update))
+
+      respond_with_turbo_streams
+    else
+      respond_with_turbo_streams(status: :unprocessable_entity)
+    end
+  end
+
+  def create_new_child
+    call = WorkPackages::CreateService.new(user: current_user).call(create_params)
+    binding.pry
+    respond_with_relations_tab_update(call, relation_to_scroll_to: call.result)
+  end
+
   def refresh_form
     call = WorkPackages::SetAttributesService.new(
       user: current_user,
