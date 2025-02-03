@@ -34,13 +34,15 @@ module WorkPackages::Dialogs
     include OpTurbo::Streamable
     include OpPrimer::ComponentHelpers
 
-    attr_reader :work_package, :project
+    attr_reader :work_package, :project, :url
 
-    def initialize(work_package:, project:)
-      super
+    def initialize(work_package:, project:, url: nil)
 
+      super()
       @work_package = work_package
       @project = project
+      @url = url # Store the user-provided URL (could be nil)
+
     end
   end
 end
