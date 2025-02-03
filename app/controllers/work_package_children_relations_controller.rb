@@ -37,16 +37,60 @@ class WorkPackageChildrenRelationsController < ApplicationController
   before_action :authorize # Short-circuit early if not authorized
 
   def new
-    component = WorkPackageRelationsTab::AddWorkPackageChildDialogComponent
-      .new(work_package: @work_package)
+    is_new = params[:isNew] == "true" # Convert param string to boolean
+
+    component = if is_new
+                  build_new_child
+                  WorkPackageRelationsTab::AddWorkPackageNewChildDialogComponent
+                    .new(work_package: @new_child, project: @project)
+                else
+                  WorkPackageRelationsTab::AddWorkPackageChildDialogComponent
+                    .new(work_package: @work_package)
+                end
+
+    respond_with_dialog(component)
+  end
+
+  def new_params
+    params.permit(*PermittedParams.permitted_attributes[:new_work_package])
+  end
+
+  def default_params(work_package)
+    contract = WorkPackages::CreateContract.new(work_package, current_user)
+
+    {
+      type: contract.assignable_types.first,
+      project: @project
+    }
+  end
+  def new_child
+    component = WorkPackageRelationsTab::AddWorkPackageNewChildDialogComponent
+                  .new(work_package: @work_package, project: @project)
     respond_with_dialog(component)
   end
 
   def create
+
+    if(params[:work_package][:id] !=nil)
     child = WorkPackage.find(params[:work_package][:id])
+
     service_result = set_relation(child:, parent: @work_package)
 
     respond_with_relations_tab_update(service_result, relation_to_scroll_to: service_result.result)
+    else
+      binding.pry
+      call = WorkPackages::CreateService.new(user: current_user).call(create_params)
+      respond_with_relations_tab_update(call, relation_to_scroll_to: call.result)
+    end
+  end
+
+  def create_new_child
+    call = WorkPackages::CreateService.new(user: current_user).call(create_params)
+    respond_with_relations_tab_update(call, relation_to_scroll_to: call.result)
+  end
+
+  def create_params
+    permitted_params.update_work_package.merge(project: @project)
   end
 
   def destroy
@@ -79,5 +123,18 @@ class WorkPackageChildrenRelationsController < ApplicationController
   def set_work_package
     @work_package = WorkPackage.find(params[:work_package_id])
     @project = @work_package.project
+  end
+
+  def build_new_child
+    initial = WorkPackage.new(project: @project)
+
+    call = WorkPackages::SetAttributesService
+             .new(model: initial, user: current_user, contract_class: WorkPackages::CreateContract)
+             .call(new_params.reverse_merge(default_params(initial)))
+
+    # We ignore errors here, as we only want to build the work package
+    @new_child = call.result
+    @new_child.errors.clear
+    @new_child.custom_values.each { |cv| cv.errors.clear }
   end
 end
