@@ -12,6 +12,12 @@ npm install
 # Volta para o diretório raiz do projeto
 cd ..
 
-# Inicia o backend (substitua pelo comando que você usa para iniciar o backend)
-# Exemplo: rails server
-bundle exec rails server
+
+rails db:migrate
+
+rails server
+
+# Inicia o frontend e o backend em paralelo
+# Substitua os comandos abaixo pelos comandos que você usa para iniciar o frontend e o backend
+npm run serve & bundle exec rails server
+
