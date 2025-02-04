@@ -1,0 +1,23 @@
+databases:
+  - name: dpg-cugh3tt2ng1s73ed7t90-a
+    databaseName: openproject25
+    user: openproject25
+    plan: free
+
+services:
+  - type: web
+    name: openproject
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    # preDeployCommand: "bundle exec rails db:migrate" # preDeployCommand only available on paid instance types
+    startCommand: "bundle exec rails server"
+    envVars:
+      - key: postgresql://openproject25:L813SJm5mxRAkXjoMsaOg3osh5mAX06h@dpg-cugh3tt2ng1s73ed7t90-a/openproject25
+        fromDatabase:
+          name: mysite
+          property: connectionString
+      - key: 90e426fd012830867af186f5576c59e6
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: 2 # sensible default
