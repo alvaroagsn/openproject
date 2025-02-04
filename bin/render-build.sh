@@ -1,22 +1,16 @@
 #!/bin/bash
 
-# Instala as dependências do Ruby
+# Sai imediatamente se algum comando falhar
+set -e
+
+echo "Instalando dependências do Ruby..."
 bundle install
 
-# Navega para o diretório frontend
-#cd frontend
-
-# Instala as dependências do Node.js
-#npm install
-
-# Volta para o diretório raiz do projeto
-#cd ..
-
+echo "Rodando migrações do banco de dados..."
 rails db:migrate
 
-rails server
+# Iniciando os serviços em paralelo corretamente
+echo "Iniciando o frontend e o backend..."
 
-# Inicia o frontend e o backend em paralelo
-# Substitua os comandos abaixo pelos comandos que você usa para iniciar o frontend e o backend
-npm run serve & bundle exec rails server
-
+# Inicia o frontend e backend corretamente em paralelo
+( npm run serve & ) && bundle exec rails server
