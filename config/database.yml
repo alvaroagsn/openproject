@@ -29,18 +29,18 @@
 production:
   adapter: postgresql
   encoding: unicode
-  database: openproject
+  database: openproject25
   pool: 20
-  username: openproject
-  password:
+  username: openproject25
+  password: L813SJm5mxRAkXjoMsaOg3osh5mAX06h
 
 development:
   adapter: postgresql
   encoding: unicode
-  database: openproject_development
+  database: openproject25
   pool: 5
-  username: openproject_development
-  password:
+  username: openproject25
+  password: L813SJm5mxRAkXjoMsaOg3osh5mAX06h
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -48,7 +48,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: openproject_test
+  database: openproject25
   pool: 5
-  username: openproject_test
-  password:
+  username: openproject25
+  password: L813SJm5mxRAkXjoMsaOg3osh5mAX06h
