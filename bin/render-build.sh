@@ -4,14 +4,13 @@
 bundle install
 
 # Navega para o diretório frontend
-cd frontend
+#cd frontend
 
 # Instala as dependências do Node.js
-npm install
+#npm install
 
 # Volta para o diretório raiz do projeto
-cd ..
-
+#cd ..
 
 rails db:migrate
 
