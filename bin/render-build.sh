@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# Sai imediatamente se algum comando falhar
-set -e
+echo "Iniciando a configuração do ambiente..."
 
-echo "Instalando dependências do Ruby..."
-bundle install
+# Define o ambiente de produção
+export RAILS_ENV=production
 
+# Instala as dependências do Ruby
+echo "Instalando dependências do backend..."
+bundle install --without development test
+
+# Executa as migrações do banco de dados
 echo "Rodando migrações do banco de dados..."
-rails db:migrate
+bundle exec rails db:migrate
 
-# Iniciando os serviços em paralelo corretamente
-echo "Iniciando o frontend e o backend..."
-
-# Inicia o frontend e backend corretamente em paralelo
-( npm run serve & ) && bundle exec rails server
+# Inicia o backend na porta fornecida pelo Render
+echo "Iniciando o servidor Rails..."
+bundle exec rails server -b 0.0.0.0 -p $PORT &
