@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
-# exit on error
+# Exit on error
 set -o errexit
 
+# Instala as dependências do Ruby
 bundle install
+
+# Instala as dependências do Node (caso tenha frontend)
+cd frontend
+npm install
+npm run build
+cd ..
+
+# Compila os assets do Rails
 bundle exec rails assets:precompile
 bundle exec rails assets:clean
 
-# If you're using a Free instance type, you need to
-# perform database migrations in the build command.
-# Uncomment the following line:
-
-# bundle exec rails db:migrate
+# Realiza as migrações do banco de dados (se necessário)
+bundle exec rails db:migrate
