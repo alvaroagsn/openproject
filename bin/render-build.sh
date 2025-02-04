@@ -9,6 +9,7 @@ bundle install
 cd frontend
 npm install
 npm run build
+npm install asciify-image --save
 cd ..
 
 # Compila os assets do Rails
