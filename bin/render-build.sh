@@ -15,4 +15,4 @@ bundle exec rails db:migrate
 
 # Inicia o backend na porta fornecida pelo Render
 echo "Iniciando o servidor Rails..."
-bundle exec rails server -b 0.0.0.0 -p $PORT &
+bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}
