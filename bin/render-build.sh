@@ -3,11 +3,11 @@
 echo "Iniciando a configuração do ambiente..."
 
 # Define o ambiente de produção
-export RAILS_ENV=production
+#export RAILS_ENV=production
 
 # Instala as dependências do Ruby
 echo "Instalando dependências do backend..."
-bundle install --without development test
+bundle install
 
 # Executa as migrações do banco de dados
 echo "Rodando migrações do banco de dados..."
